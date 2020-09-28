@@ -15,21 +15,16 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Ensure backend infrastructure exist
+          name: Create Stack
           command: |
             aws cloudformation deploy \
               --template-file template.yml \
               --stack-name prod-${CIRCLE_WORKFLOW_ID}
       - run: return 1
       - destroy_environment
-        when: on_fail
+      -  when: on_fail
 
 workflows:
   my_workflow:
     jobs:
-      - create_infrastructure
-
-
-#Note: The environment variables: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_DEFAULT_REGION were added to the Project Settings in Circle CI.
-#Setting an Environment Variable in a Project:  https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project
-#Setting an Environment Variable in a Context (This environment variable will be available across projects): https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-context
+      - build
